@@ -1,5 +1,9 @@
 from django.http import HttpResponse
 
+from .models import Priklad
+
 
 def index(request):
-    return HttpResponse("Hello, world.")
+    priklady = Priklad.objects.all()
+    output = ', '.join([p.priklad for p in priklady])
+    return HttpResponse(output)

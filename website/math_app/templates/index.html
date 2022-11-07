@@ -1,0 +1,9 @@
+{% if priklady %}
+    <ul>
+    {% for priklad in priklady %}
+        <li>{{ priklad.priklad }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Žádné příklady nejsou k dispozici.</p>
+{% endif %}
