@@ -1,9 +1,6 @@
-{% if priklady %}
-    <ul>
-    {% for priklad in priklady %}
-        <li>{{ priklad.priklad }}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>Žádné příklady nejsou k dispozici.</p>
-{% endif %}
+<form method="POST" action="">
+    {% csrf_token %}
+    <h3>{{ priklad.priklad }}</h3>
+    <div>{{ form.reseni }}</div>
+    <input type="submit" value="Odeslat">
+</form>
