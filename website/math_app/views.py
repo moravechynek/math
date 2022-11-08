@@ -4,9 +4,15 @@ from django.shortcuts import render, redirect
 from .models import Priklad
 from .forms import ReseniForm
 
-
 def index(request):
-    priklad = Priklad.objects.all()[0]
+    priklady = Priklad.objects.all()
+    context = {
+        'priklady': priklady
+    }
+    return render(request, 'index.html', context=context)
+
+def vypocet(request, priklad_id):
+    priklad = Priklad.objects.all()[priklad_id]
     if request.method == "POST":
         form = ReseniForm(request.POST, priklad=priklad)
         if form.is_valid():
@@ -20,7 +26,7 @@ def index(request):
             else: return redirect('/spatne')
     else:
         form = ReseniForm(priklad=priklad)
-    return render(request, 'index.html', {'form': form, 'priklad': priklad })
+    return render(request, 'form.html', {'form': form, 'priklad': priklad })
 
 def calc(request):
     return render(request, "calc.html")

@@ -1,0 +1,6 @@
+<form method="POST" action="">
+    {% csrf_token %}
+    <h3>{{ priklad.priklad }}</h3>
+    <div>{{ form.reseni }}</div>
+    <input type="submit" value="Odeslat">
+</form>

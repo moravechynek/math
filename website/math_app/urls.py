@@ -7,4 +7,5 @@ urlpatterns = [
     path('calc/', views.calc, name='calc'),
     path('spravne/', views.spravne, name='spravne'),
     path('spatne/', views.spatne, name='spatne'),
+    path('<int:priklad_id>/', views.vypocet, name='vypocet'),
 ]
