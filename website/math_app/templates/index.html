@@ -1,5 +1,16 @@
-{% if priklady %}
-{% endif %}
-{% for priklad in priklady %}
-<p><a href="/{{ priklad.id}}"> {{ priklad.priklad }} </a></p>
-{% endfor %}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        {% for u in ucebnice %}
+        <div class="col-2">
+            <a href="/ucebnice/{{ u.id|add:"-1"}}">
+                <img class="border" src={{ u.obrazek.url }} alt={{ u.obrazek.url }} style="max-width:150px;max-height:200px;">
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

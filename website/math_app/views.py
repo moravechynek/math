@@ -1,15 +1,22 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from .models import Priklad
+from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
 from .forms import ReseniForm
 
 def index(request):
-    priklady = Priklad.objects.all()
+    ucebnice = Ucebnice.objects.all()
     context = {
-        'priklady': priklady
-    }
+        'ucebnice': ucebnice
+    } 
     return render(request, 'index.html', context=context)
+
+def ucebnice(request, ucebnice_id):
+    ucebnice = Ucebnice.objects.all()[ucebnice_id]
+    context = {
+        'ucebnice': ucebnice
+    } 
+    return render(request, 'ucebnice.html', context=context)
 
 def vypocet(request, priklad_id):
     priklad = Priklad.objects.all()[priklad_id]
@@ -18,12 +25,14 @@ def vypocet(request, priklad_id):
         if form.is_valid():
             reseni = form.save(commit=False)
             reseni.FK_priklad = priklad
-            reseni.save()
-            print(eval(priklad.priklad))
-            print(reseni.reseni)
             if int(reseni.reseni) == eval(priklad.priklad):
+                reseni.je_spravne = True
+                reseni.save()
                 return redirect('/spravne')
-            else: return redirect('/spatne')
+            else:
+                reseni.je_spravne = False
+                reseni.save()
+                return redirect('/spatne')
     else:
         form = ReseniForm(priklad=priklad)
     return render(request, 'form.html', {'form': form, 'priklad': priklad })
@@ -36,3 +45,6 @@ def spravne(request):
 
 def spatne(request):
     return render(request, "spatne.html")
+
+def statistics(request):
+    return render(request, "statistics.html")
