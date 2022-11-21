@@ -19,13 +19,23 @@ def ucebnice(request, ucebnice_id):
     return render(request, 'ucebnice.html', context=context)
 
 def vypocet(request, priklad_id):
+    i = 1
     priklad = Priklad.objects.all()[priklad_id]
     if request.method == "POST":
         form = ReseniForm(request.POST, priklad=priklad)
         if form.is_valid():
             reseni = form.save(commit=False)
             reseni.FK_priklad = priklad
-            if int(reseni.reseni) == eval(priklad.priklad):
+
+            pyVyraz = priklad.priklad
+            while i <= priklad.priklad.count('|'):
+                if i % 2 == 0:
+                    pyVyraz = pyVyraz.replace('|',')',1)
+                elif i % 2 == 1:
+                    pyVyraz = pyVyraz.replace('|','abs(',1)
+                i += 1
+
+            if int(reseni.reseni) == eval(str(pyVyraz)):
                 reseni.je_spravne = True
                 reseni.save()
                 return redirect('/spravne')

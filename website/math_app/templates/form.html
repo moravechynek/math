@@ -1,6 +1,17 @@
 <form method="POST" action="">
     {% csrf_token %}
-    <h3>{{ priklad.priklad }}</h3>
+    <table>
+        <tr>
+            <th>Databáze</th>
+            <th>MathJax</th>
+        </tr>
+        <tr>
+            <td>{{ priklad.priklad }}</th>
+            <td>\({{ priklad.priklad }}\)</th>
+        </tr>
+    </table>
     <div>{{ form.reseni }}</div>
     <input type="submit" value="Odeslat">
 </form>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
