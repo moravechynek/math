@@ -35,13 +35,30 @@ def vypocet(request, priklad_id):
             reseni.FK_priklad = priklad
 
             pyVyraz = priklad.priklad
-            while i <= priklad.priklad.count('|'):
-                if i % 2 == 0:
-                    pyVyraz = pyVyraz.replace('|',')',1)
-                elif i % 2 == 1:
-                    pyVyraz = pyVyraz.replace('|','abs(',1)
-                i += 1
+            if pyVyraz.find('|'):
+                while i <= priklad.priklad.count('|'):
+                    if i % 2 == 0:
+                        pyVyraz = pyVyraz.replace('|',')',1)
+                    elif i % 2 == 1:
+                        pyVyraz = pyVyraz.replace('|','abs(',1)
+                    i += 1
+            i = 0
 
+            jmenovatel = ''
+            citatel = ''
+            position = priklad.priklad.find('\\frac{')
+            if position != -1:
+                while priklad.priklad[position + len('\\frac{') + i] != '}':
+                    jmenovatel += priklad.priklad[position + len('\\frac{')]
+                    i += 1
+                i = 0
+                while priklad.priklad[position + len('\\frac{' + jmenovatel + '}{') + i] != '}':
+                    citatel += priklad.priklad[position + len('\\frac{')]
+                    i += 1
+                i = 0
+                print(f'Oldvyraz: {pyVyraz}')
+                pyVyraz = pyVyraz.replace('\\frac{' + jmenovatel + '}{' + citatel + '}',str(int(jmenovatel)/int(citatel)))
+            
             if int(reseni.reseni) == eval(str(pyVyraz)):
                 reseni.je_spravne = True
                 reseni.save()
