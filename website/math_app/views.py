@@ -4,6 +4,13 @@ from django.shortcuts import render, redirect
 from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
 from .forms import ReseniForm
 
+
+"""
+from django.contrib.auth.decorators import login_required
+
+@login_required
+"""
+
 def index(request):
     ucebnice = Ucebnice.objects.all()
     context = {

@@ -6,4 +6,5 @@ urlpatterns = [
     path('', include('math_app.urls')),
     #path('react/', include('frontend.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
