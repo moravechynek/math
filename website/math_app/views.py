@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 
 from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
-from .forms import ReseniForm
+from .forms import ReseniForm, UcebniceForm
 
 
 """
@@ -35,6 +37,23 @@ def ucebnice(request, ucebnice_id):
         'priklady': priklady
     } 
     return render(request, 'ucebnice.html', context=context)
+
+def ucebniceCreate(request):
+    if request.method == "POST":
+        form = UcebniceForm(request.POST, priklad=priklad)
+        if form.is_valid():
+            ucebnice = form.save(commit=False)
+            reseni.FK_priklad = priklad
+            return redirect('/spatne')
+    else:
+        form = ReseniForm(priklad=priklad)
+    return render(request, 'form.html', {'form': form, 'priklad': priklad })
+
+class UcebniceCreate(CreateView):
+    model = Ucebnice
+    fields = ['nazev',]
+    template_name_suffix = '-create'
+    success_url = reverse_lazy('index')
 
 def vypocet(request, priklad_id):
     i = 1

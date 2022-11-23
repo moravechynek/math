@@ -7,7 +7,7 @@ def get_image_ucebnice(instance, filename):
 
 class Ucebnice(models.Model):
     nazev = models.CharField(max_length=200)
-    obrazek = models.ImageField(upload_to=get_image_ucebnice,default=None)
+    obrazek = models.ImageField(upload_to=get_image_ucebnice,default=None,blank=True)
     def __str__(self):
         return self.nazev
     class Meta:

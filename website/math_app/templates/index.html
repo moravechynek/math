@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<button class="btn bg-success float-right mr-5 mt-3 text-light">
-    +
-</button>
+{% if user.is_authenticated %}
+    <a href={% url 'ucebnice-create' %} class="btn bg-success float-right mr-5 mt-3 text-light">
+        +
+    </a>
+{% endif %}
 <div class="container mt-5">
     <div class="row">
         {% for u in ucebnice %}
-        <div class="col-2">
+        <div class="col-2 my-2">
+            {% if u.obrazek %}
             <a href="/ucebnice/{{ u.id|add:"-1"}}">
                 <img class="border" src={{ u.obrazek.url }} alt={{ u.obrazek.url }} style="max-width:150px;max-height:200px;">
             </a>
+            {% else %}
+            <a href="/ucebnice/{{ u.id|add:"-1"}}">
+                <div class="border" style="max-width:134px;max-height:200px;min-width:134px;min-height:200px;"></div>
+            </a>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

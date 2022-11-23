@@ -1,5 +1,5 @@
 from django.forms import ModelForm, CharField
-from .models import Reseni
+from .models import Reseni, Ucebnice
 
 class ReseniForm(ModelForm):
     def __init__(self, *args, priklad, **kwargs):
@@ -9,3 +9,9 @@ class ReseniForm(ModelForm):
     class Meta:
         model = Reseni
         fields = ('reseni',)
+
+class UcebniceForm(ModelForm):
+
+    class Meta:
+        model = Ucebnice
+        fields = ('nazev',)
