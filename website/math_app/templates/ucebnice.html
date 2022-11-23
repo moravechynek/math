@@ -1,7 +1,46 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="container mt-5">
-    <p>{{ ucebnice.nazev }}</p>
-</div>
+{% block style %}
+    <style>
+        .priklad-link{
+            color: black;
+        }
+    </style>
 {% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>{{ ucebnice.nazev }}</h2>
+        <div class="my-4">
+            {% if kapitoly %}
+                {% for k in kapitoly %}
+                    <p>
+                        <a href="#kapitola{{ k.id }}">{{ forloop.counter }}. {{ k.nazev }}</a>
+                    </p>
+                {% endfor %}
+                {% for k in kapitoly %}
+                    <h5 id="kapitola{{ k.id }}">{{ forloop.counter }}. {{ k.nazev }}</h5>
+                    {% for c in cviceni %}
+                        {% if c.FK_kapitola == k %}
+                            <p>{{ c.text }}</p>
+                            {% for p in priklady %}
+                                {% if p.FK_cviceni == c %}
+                                    <a href={% url 'vypocet' p.id|add:-1 %} class="priklad-link">
+                                        <p>\({{ p.priklad }}\)</p>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p>Nebyly nalezeny zadne kapitoly</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %} 
+
+{% block script %}
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+{% endblock %} 

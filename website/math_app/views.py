@@ -20,8 +20,19 @@ def index(request):
 
 def ucebnice(request, ucebnice_id):
     ucebnice = Ucebnice.objects.all()[ucebnice_id]
+    kapitoly = Kapitola.objects.filter(FK_ucebnice_id=ucebnice_id + 1)
+    cviceni = []
+    priklady = []
+    for k in kapitoly:
+        cviceni += Cviceni.objects.filter(FK_kapitola=k)
+    for c in cviceni:
+        priklady += Priklad.objects.filter(FK_cviceni=c)
+
     context = {
-        'ucebnice': ucebnice
+        'ucebnice': ucebnice,
+        'kapitoly': kapitoly,
+        'cviceni': cviceni,
+        'priklady': priklady
     } 
     return render(request, 'ucebnice.html', context=context)
 
