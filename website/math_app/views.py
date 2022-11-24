@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
@@ -35,10 +35,78 @@ def ucebnice(request, ucebnice_id):
     } 
     return render(request, 'ucebnice.html', context=context)
 
+def ucebniceEdit(request, ucebnice_id):
+    ucebnice = Ucebnice.objects.all()[ucebnice_id]
+    kapitoly = Kapitola.objects.filter(FK_ucebnice_id=ucebnice_id + 1)
+    cviceni = []
+    priklady = []
+    for k in kapitoly:
+        cviceni += Cviceni.objects.filter(FK_kapitola=k)
+    for c in cviceni:
+        priklady += Priklad.objects.filter(FK_cviceni=c)
+
+    context = {
+        'ucebnice': ucebnice,
+        'kapitoly': kapitoly,
+        'cviceni': cviceni,
+        'priklady': priklady
+    } 
+    return render(request, 'ucebnice_edit.html', context=context)
+
 class UcebniceCreate(LoginRequiredMixin,CreateView):
     model = Ucebnice
     fields = ['nazev',]
-    template_name_suffix = '-create'
+    template_name_suffix = '_create'
+    success_url = reverse_lazy('index')
+
+class UcebniceUpdate(LoginRequiredMixin,UpdateView):
+    model = Ucebnice
+    fields = ['nazev',]
+
+class UcebniceDelete(LoginRequiredMixin,DeleteView):
+    model = Ucebnice
+    success_url = reverse_lazy('index')
+
+class KapitolaCreate(LoginRequiredMixin,CreateView):
+    model = Kapitola
+    fields = ['nazev',]
+    template_name_suffix = '_create'
+    success_url = reverse_lazy('index')
+
+class KapitolaUpdate(LoginRequiredMixin,UpdateView):
+    model = Kapitola
+    fields = ['nazev',]
+
+class KapitolaDelete(LoginRequiredMixin,DeleteView):
+    model = Kapitola
+    success_url = reverse_lazy('index')
+
+class CviceniCreate(LoginRequiredMixin,CreateView):
+    model = Cviceni
+    fields = ['text',]
+    template_name_suffix = '_create'
+    success_url = reverse_lazy('index')
+
+class CviceniUpdate(LoginRequiredMixin,UpdateView):
+    model = Cviceni
+    fields = ['text',]
+
+class CviceniDelete(LoginRequiredMixin,DeleteView):
+    model = Cviceni
+    success_url = reverse_lazy('index')
+
+class PrikladCreate(LoginRequiredMixin,CreateView):
+    model = Priklad
+    fields = ['priklad',]
+    template_name_suffix = '_create'
+    success_url = reverse_lazy('index')
+
+class PrikladUpdate(LoginRequiredMixin,UpdateView):
+    model = Priklad
+    fields = ['priklad',]
+
+class PrikladDelete(LoginRequiredMixin,DeleteView):
+    model = Priklad
     success_url = reverse_lazy('index')
 
 def register_request(request):

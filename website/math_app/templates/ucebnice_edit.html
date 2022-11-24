@@ -5,13 +5,18 @@
         .priklad-link{
             color: black;
         }
+        .float-left{
+            float: left;
+        }
+        .float-rigth{
+            float: right;
+        }
     </style>
 {% endblock %}
 
 {% block content %}
     <div class="container mt-5">
-        <h2>{{ ucebnice.nazev }}</h2><a href={% url 'ucebnice-editace' ucebnice.id|add:-1 %}>Upravit</a>
-        {% comment "" %}/ucebnice/{{ ucebnice.id}}/update{% endcomment %}
+        <h2>{{ ucebnice.nazev }}</h2>
         <div class="my-4">
             {% if kapitoly %}
                 {% for k in kapitoly %}
@@ -20,15 +25,28 @@
                     </p>
                 {% endfor %}
                 {% for k in kapitoly %}
-                    <h5 id="kapitola{{ k.id }}">{{ forloop.counter }}. {{ k.nazev }}</h5>
+                    <div style="width: 50%;">
+                        <h5 id="kapitola{{ k.id }}">
+                            {{ forloop.counter }}. {{ k.nazev }}
+                            <span style="font-size: 1rem;">
+                                <a style="float:right;" href="/kapitola/{{ k.id}}/update">Upravit kapitolu</a>
+                            </span>
+                        </h5>
+                    </div>
                     {% for c in cviceni %}
                         {% if c.FK_kapitola == k %}
-                            <p>{{ c.text }}</p>
+                            <div style="width: 50%;">
+                                <p>
+                                    {{ c.text }}
+                                    <a style="float:right;" href="/cviceni/{{ k.id}}/update">Upravit cvičení</a>
+                                </p>
+                            </div>
                             {% for p in priklady %}
                                 {% if p.FK_cviceni == c %}
-                                    <a href={% url 'vypocet' p.id|add:-1 %} class="priklad-link">
-                                        <p>\({{ p.priklad }}\)</p>
-                                    </a>
+                                        <p style="width: 50%;">
+                                            <span>\({{ p.priklad }}\)</span>
+                                            <a style="float:right;" href="/priklad/{{ p.id}}/update">Upravit</a>
+                                        </p>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
