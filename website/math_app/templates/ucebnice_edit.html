@@ -49,12 +49,24 @@
                                         </p>
                                 {% endif %}
                             {% endfor %}
+                            <p>
+                                <a class="nav-link" href="/priklad/create">+ přidat příklad</a>
+                            </p>
                         {% endif %}
                     {% endfor %}
+                    <p>
+                        <a class="nav-link" href="/cviceni/create">+ přidat cvičení</a>
+                    </p>
                 {% endfor %}
+                <p>
+                    <a class="nav-link" href="/kapitola/create">+ přidat kapitolu</a>
+                </p>
             {% else %}
-                <p>Nebyly nalezeny zadne kapitoly</p>
+            <p>
+                <a class="nav-link" href="/kapitola/create">+ přidat kapitolu</a>
+            </p>
             {% endif %}
+            
         </div>
     </div>
 {% endblock %} 

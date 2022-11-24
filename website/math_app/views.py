@@ -55,7 +55,7 @@ def ucebniceEdit(request, ucebnice_id):
 
 class UcebniceCreate(LoginRequiredMixin,CreateView):
     model = Ucebnice
-    fields = ['nazev',]
+    fields = ['nazev','obrazek','autor']
     template_name_suffix = '_create'
     success_url = reverse_lazy('index')
 
@@ -177,4 +177,8 @@ def spatne(request):
     return render(request, "spatne.html")
 
 def statistics(request):
-    return render(request, "statistics.html")
+    reseni = Reseni.objects.all()
+    context = {
+        'reseni': reseni,
+    } 
+    return render(request, 'statistics.html', context=context)

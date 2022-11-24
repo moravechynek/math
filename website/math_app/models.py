@@ -7,7 +7,10 @@ def get_image_ucebnice(instance, filename):
 
 class Ucebnice(models.Model):
     nazev = models.CharField(max_length=200)
-    obrazek = models.ImageField(upload_to=get_image_ucebnice,default=None,blank=True)
+    obrazek = models.ImageField(upload_to=get_image_ucebnice,blank=True,null=True)
+    autor = models.CharField(max_length=100,blank=True,null=True)
+    cas_vytvoreni = models.DateTimeField(auto_now=True,blank=True,null=True)
+    cas_zmeny = models.DateTimeField(auto_now_add=True,blank=True,null=True)
     def __str__(self):
         return self.nazev
     class Meta:
@@ -65,7 +68,9 @@ class Reseni(models.Model):
         null=False,
         default=None)
     je_spravne = models.BooleanField(default=None)
-    #timestamp
+    cas = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    uzivatel = models.CharField(max_length=100, blank=True, null=True)
+    
     def __str__(self):
             return self.reseni
     class Meta:

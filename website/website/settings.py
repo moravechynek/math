@@ -123,7 +123,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "math_app/static",
 ]
 
 LOGIN_REDIRECT_URL = '/'
@@ -131,3 +131,5 @@ LOGIN_REDIRECT_URL = '/'
 # Test
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # https://docs.djangoproject.com/en/4.0/topics/email/
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

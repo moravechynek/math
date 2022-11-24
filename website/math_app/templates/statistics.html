@@ -3,5 +3,37 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Statistiky</h2>
+        <table class="table">
+            <tr>
+                <th>
+                    priklad
+                </th>
+                <th>
+                    reseni
+                </th>
+                <th>
+                    spravnost
+                </th>
+                <th>
+                    cas
+                </th>
+            </tr>
+            {% for r in reseni %}
+            <tr>
+                <td>
+                    {{ r.FK_priklad }}
+                </td>
+                <td>
+                    {{ r.reseni }}
+                </td>
+                <td>
+                    {{ r.je_spravne }}
+                </td>
+                <td>
+                    {{ r.cas }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
 </div>
 {% endblock %}
