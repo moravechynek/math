@@ -13,4 +13,5 @@ urlpatterns = [
     path('priklad/<int:priklad_id>/', views.vypocet, name='vypocet'),
     path('react/', frontend.views.index, name='react'),
     path('ucebnice/create/', views.UcebniceCreate.as_view(), name='ucebnice-create'),
+    path('register/', views.register_request, name='register')
 ]

@@ -2,16 +2,13 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import login
+from django.contrib import messages
 
 from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
-from .forms import ReseniForm, UcebniceForm
+from .forms import ReseniForm, UcebniceForm, RegistraceForm
 
-
-"""
-from django.contrib.auth.decorators import login_required
-
-@login_required
-"""
 
 def index(request):
     ucebnice = Ucebnice.objects.all()
@@ -38,22 +35,23 @@ def ucebnice(request, ucebnice_id):
     } 
     return render(request, 'ucebnice.html', context=context)
 
-def ucebniceCreate(request):
-    if request.method == "POST":
-        form = UcebniceForm(request.POST, priklad=priklad)
-        if form.is_valid():
-            ucebnice = form.save(commit=False)
-            reseni.FK_priklad = priklad
-            return redirect('/spatne')
-    else:
-        form = ReseniForm(priklad=priklad)
-    return render(request, 'form.html', {'form': form, 'priklad': priklad })
-
-class UcebniceCreate(CreateView):
+class UcebniceCreate(LoginRequiredMixin,CreateView):
     model = Ucebnice
     fields = ['nazev',]
     template_name_suffix = '-create'
     success_url = reverse_lazy('index')
+
+def register_request(request):
+	if request.method == "POST":
+		form = RegistraceForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			login(request, user)
+			messages.success(request, "Registration successful." )
+			return redirect("/")
+		messages.error(request, "Unsuccessful registration. Invalid information.")
+	form = RegistraceForm()
+	return render (request=request, template_name="registration/register.html", context={"register_form":form})
 
 def vypocet(request, priklad_id):
     i = 1
