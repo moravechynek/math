@@ -6,6 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
 from django.contrib import messages
 
+from datetime import datetime
+
 from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
 from .forms import ReseniForm, UcebniceForm, RegistraceForm
 
@@ -129,7 +131,10 @@ def vypocet(request, priklad_id):
         if form.is_valid():
             reseni = form.save(commit=False)
             reseni.FK_priklad = priklad
-
+            
+            print()
+            print(f'Reseni: {reseni.reseni}')
+            print()
             pyVyraz = priklad.priklad
             if pyVyraz.find('|'):
                 while i <= priklad.priklad.count('|'):
@@ -177,8 +182,16 @@ def spatne(request):
     return render(request, "spatne.html")
 
 def statistics(request):
+    labels = []
+    data = []
+
+    queryset = Reseni.objects.all()
+    for i in queryset:
+        labels.append(i.FK_priklad.priklad)
     reseni = Reseni.objects.all()
     context = {
         'reseni': reseni,
-    } 
+        'labels': labels,
+        'data': data,
+    }
     return render(request, 'statistics.html', context=context)

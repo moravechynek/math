@@ -1,21 +1,27 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container p-5">
     <h2>Statistiky</h2>
-        <table class="table">
+    <div class="px-5">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+<div class="container px-5">
+        <table class="table table-bordered">
             <tr>
                 <th>
-                    priklad
+                    příklad
                 </th>
                 <th>
-                    reseni
+                    řešení
                 </th>
                 <th>
-                    spravnost
+                    datum
                 </th>
                 <th>
-                    cas
+                    správnost
                 </th>
             </tr>
             {% for r in reseni %}
@@ -27,13 +33,45 @@
                     {{ r.reseni }}
                 </td>
                 <td>
-                    {{ r.je_spravne }}
+                    {{ r.cas|date:"j.n.Y" }}
                 </td>
                 <td>
-                    {{ r.cas }}
+                    {% if r.je_spravne %}
+                    <img src={% static 'img/icons/icons8-done.svg' %} style="height:24px;width:24px;"></img>
+                    {% else %}
+                    <img src={% static 'img/icons/icons8-close.svg' %} style="height:24px;width:24px;"></img>
+                    {% endif %}
                 </td>
-            </tr>
+                </tr>
             {% endfor %}
         </table>
 </div>
+{% endblock %}
+
+
+{% block script %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script> 
 {% endblock %}
