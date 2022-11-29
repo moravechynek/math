@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block style %}
     <style>
@@ -10,7 +11,12 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h2>{{ ucebnice.nazev }}</h2><a href={% url 'ucebnice-editace' ucebnice.id|add:-1 %}>Upravit</a>
+        <h2>
+            {{ ucebnice.nazev }}
+            <a href={% url 'ucebnice-editace' ucebnice.id|add:-1 %}>
+                <img style="width:20px;height:20px;" src={% static 'img/icons/edit.png' %} alt="edit-icon"></img>
+            </a>
+        </h2>
         {% comment "" %}/ucebnice/{{ ucebnice.id}}/update{% endcomment %}
         <div class="my-4">
             {% if kapitoly %}

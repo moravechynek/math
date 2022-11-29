@@ -3,8 +3,10 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 from datetime import datetime
 
@@ -37,6 +39,7 @@ def ucebnice(request, ucebnice_id):
     } 
     return render(request, 'ucebnice.html', context=context)
 
+@login_required
 def ucebniceEdit(request, ucebnice_id):
     ucebnice = Ucebnice.objects.all()[ucebnice_id]
     kapitoly = Kapitola.objects.filter(FK_ucebnice_id=ucebnice_id + 1)
@@ -189,9 +192,15 @@ def statistics(request):
     for i in queryset:
         labels.append(i.FK_priklad.priklad)
     reseni = Reseni.objects.all()
+
+    paginator = Paginator(reseni, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'reseni': reseni,
         'labels': labels,
         'data': data,
+        'page_obj': page_obj,
     }
     return render(request, 'statistics.html', context=context)
