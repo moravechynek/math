@@ -12,6 +12,7 @@ from datetime import datetime
 
 from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
 from .forms import ReseniForm, UcebniceForm, RegistraceForm
+from .evaluate import evaluate
 
 
 def index(request):
@@ -135,35 +136,7 @@ def vypocet(request, priklad_id):
             reseni = form.save(commit=False)
             reseni.FK_priklad = priklad
             
-            print()
-            print(f'Reseni: {reseni.reseni}')
-            print()
-            pyVyraz = priklad.priklad
-            if pyVyraz.find('|'):
-                while i <= priklad.priklad.count('|'):
-                    if i % 2 == 0:
-                        pyVyraz = pyVyraz.replace('|',')',1)
-                    elif i % 2 == 1:
-                        pyVyraz = pyVyraz.replace('|','abs(',1)
-                    i += 1
-            i = 0
-
-            jmenovatel = ''
-            citatel = ''
-            position = priklad.priklad.find('\\frac{')
-            if position != -1:
-                while priklad.priklad[position + len('\\frac{') + i] != '}':
-                    jmenovatel += priklad.priklad[position + len('\\frac{')]
-                    i += 1
-                i = 0
-                while priklad.priklad[position + len('\\frac{' + jmenovatel + '}{') + i] != '}':
-                    citatel += priklad.priklad[position + len('\\frac{')]
-                    i += 1
-                i = 0
-                print(f'Oldvyraz: {pyVyraz}')
-                pyVyraz = pyVyraz.replace('\\frac{' + jmenovatel + '}{' + citatel + '}',str(int(jmenovatel)/int(citatel)))
-            
-            if int(reseni.reseni) == eval(str(pyVyraz)):
+            if int(reseni.reseni) == eval(str(evaluate(priklad.priklad))):
                 reseni.je_spravne = True
                 reseni.save()
                 return redirect('/spravne')

@@ -20,10 +20,26 @@
 
 ## Podporované funkce
 
-| Název             | Zápis           | Mathjax       | Python   |
-| -----------       | -----------     | -------       | -------  |
-| absolutní hodnota | \|$n$\|           | \ \| n \ \|   | abs(n)   |
-| zlomky            | $\frac{1}{n}$ | \frac{1}{n}   | 1/n      |
+| Název             | Zápis         | | LaTex     | | Python           | Mathquill|
+| -----------       | -----------   |-| -------   |-| -------          | -------- |
+| absolutní hodnota | $\|\|$        |O| \left\right|0| abs(e)          | \|       |
+| zlomky            | $\frac{e}{e}$ |O| frac{e}{e}|χ| e/e              | /        |
+| scitani           | $e+e$         |O| e+e       |χ| e+e              | +        |
+| odcitani          | $e-e$         |O| e-e       |χ| e-e              | -        |
+| nasobeni          | $e\cdot e$    |O| e\cdot e  |χ| e*e              | *        |
+| deleni            | $e\div e$     |χ| e\div e   |χ| e/e              | \div     |
+| faktorial         | $e!$          |χ| e!        |χ| math.factorial(e)| !        |
+| kulaté závorky    | $()$          |χ| ()        |χ| ()               | (        |
+| hranaté závorky   | $$            |χ| []        |χ| ()               | [        |
+| složené závorky   | $\{\}$        |χ| \{\}      |χ| ()               | {        |
+| odmocniny         | $$            |χ| \sqrt     |χ| math.sqrt()      | \sqrt    |
+| mocniny           | $2^{3}$       |χ| ^{}       |χ| math.pow()       | ^        |
+| konstanta pí      | $\pi$         |χ| \pi       |χ| math.pi          | \pi      |
+| konstanta e       | $e$           |χ| e         |χ| math.e           | nepodpo  |
+| logaritmy         | $$            |χ|           |χ| math.log         | \log,\ln |
+| sinus             | $\sin$        |χ| \sin      |χ| math.sin()       | \sin     |
+| cosinus           | $\cos$        |χ| \cos      |χ| math.cos()       | \cos     |
+| tangens           | $\tan$        |χ| \tan      |χ| math.tan()       | \tan     |
 
 
 ## Technologie
