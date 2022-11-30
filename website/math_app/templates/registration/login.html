@@ -1,48 +1,68 @@
 {% extends "base.html" %}
 
+{% block style %}
+<style>
+  .form{
+    border: 2px solid rgb(90, 90, 204);
+    border-radius: 5px;
+  }
+  .prihlasit{
+  }
+  input{
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
   <div class="d-flex justify-content-center">
       
 
-    <form method="post" action="{% url 'login' %}">
+    <form method="post" action="{% url 'login' %}" class="p-5 bg-light form">
+      <h3 class="pb-2">Přihlásit se</h3>
       {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+        <p>Chybně zadané jméno nebo heslo.</p>
       {% endif %}
 
       {% if next %}
         {% if user.is_authenticated %}
           <p>Your account doesn't have access to this page. To proceed,
           please login with an account that has access.</p>
-        {% else %}
-          <p>Please login to see this page.</p>
         {% endif %}
       {% endif %}
-
-
-
-
       {% csrf_token %}
       <table>
         <tr>
-          <td>{{ form.username.label_tag }}</td>
+          <td>Jméno:</td>
           <td>{{ form.username }}</td>
         </tr>
         <tr>
-          <td>{{ form.password.label_tag }}</td>
+          <td>Heslo:</td>
           <td>{{ form.password }}</td>
         </tr>
       </table>
-      <input type="submit" value="login">
+      <div class="d-flex justify-content-center pt-3 prihlasit">
+        <input type="submit" value="přihlásit se" style="width: 150px;" class="btn border">
+      </div>
       <input type="hidden" name="next" value="{{ next }}">
 
       {# Assumes you setup the password_reset view in your URLconf #}
-      <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
-      <p><a href="{% url 'register' %}">Nemáte účet?</a></p>
+      <div class="d-flex justify-content-around pt-3">
+        <a href="{% url 'password_reset' %}">Změna hesla</a>
+        <a href="{% url 'register' %}">Registrace</a>
+      </div>
     </form>
-
-    
   </div>
 </div>
 {% endblock %}

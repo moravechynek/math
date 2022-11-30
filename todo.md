@@ -3,7 +3,6 @@
 ## Uživatelé a oprávnění
 - učebnice by se měla zobrazovat pouze pro autora, adminy a autorem přidané uživatele
 - registrační formulář v češtině
-- hezčí login formulář
 - emailový server v djangu
 
 ## Statistiky
