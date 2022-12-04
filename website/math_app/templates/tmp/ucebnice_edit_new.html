@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/mathquill-0.10.1/mathquill.css" />
+    <style>
+        p.nav-link {
+            margin: 0px;
+        }
+
+        .priklad {
+            padding-left: 40px;
+        }
+
+        .cviceni {
+            padding-left: 10px;
+        }
+
+        .kapitola {
+            padding-left: 0px;
+        }
+        .math-field{
+            border: none;
+            background-color: white;
+        }
+        .editable-title{
+            height:15px;
+            width:15px;
+            margin-bottom:3px;
+        }
+        .btn-add{
+            background-color: white;
+            border: none;
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md bg-light navbar-inverse">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Učebnice</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Kalkulačka</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Statistiky</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">React</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <p class="nav-link">Uživatel: admin</p>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Odhlásit se</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="#">Přihlásit se</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="container mt-5">
+        <h2>
+            <span role="textbox" contenteditable>Název učebnice</span>
+        </h2>
+        <div class="my-4">
+            <ol id="obsah"></ol>
+            <div style="width: 50%;">
+                <ol id="ucebnice"></ol>
+                <p class="kapitola">
+                    <button class="btn-add" onclick="addKapitolu()">+ kapitolu</button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../../static/mathquill-0.10.1/mathquill.js"></script>
+
+    <script>
+        /*const mathFieldSpan = document.getElementById('math-field');
+        const latexSpan = document.getElementById('id_priklad');
+        latexSpan.style.display = 'none';
+
+        var MQ = MathQuill.getInterface(2); // for backcompat
+        var mathField = MQ.MathField(mathFieldSpan, {
+            spaceBehavesLikeTab: true, // configurable
+            handlers: {
+                edit: function () { // useful event handlers
+                    latexSpan.value = mathField.latex(); // simple API
+                }
+            }
+        });*/
+
+        
+        const ucebnice = document.getElementById('ucebnice')
+
+        const obsah = document.getElementById('obsah')
+
+
+        function addPriklad(kapitola,cviceni){
+            let pocet_prikladu = 0
+            const cviceni_rand = document.getElementById(
+                `kapitola-${kapitola}-cviceni-${cviceni}`)
+            console.log(cviceni_rand.childNodes.length)
+            for(let i=0; i < cviceni_rand.childNodes.length; i++){
+                if((i%2) == 0){
+                    pocet_prikladu++
+                }
+            }
+            console.log(pocet_prikladu)
+
+            const para = document.createElement("p");
+            para.classList.add("priklad");
+
+            const span = document.createElement("span");
+            const node = document.createTextNode("1+1");
+            span.appendChild(node);
+            span.setAttribute('id',`math-field${pocet_prikladu}`);
+            span.setAttribute('class','math-field')
+
+            const img = document.createElement("img")
+            img.setAttribute('id',`kapitola-${kapitola}-cviceni-${cviceni}-priklad-${pocet_prikladu}-close`)
+            img.setAttribute('src','../../static/img/icons/icons8-close.svg')
+            img.style.marginLeft = '10px'
+
+            const input = document.createElement('input')
+            input.setAttribute('type','text')
+            input.setAttribute('name','priklad')
+            input.setAttribute('value','')
+            input.setAttribute('maxlength','200')
+            input.setAttribute('required','')
+            input.setAttribute('id',`id_priklad${pocet_prikladu}`)
+            input.style.display='none'
+        
+            para.appendChild(span)
+            para.appendChild(img)
+            para.appendChild(input)
+
+            var newMathField = MQ.MathField(span, {
+            spaceBehavesLikeTab: true,
+            handlers: {
+                edit: function () {
+                    input.value = mathField.latex();
+                }
+            }
+            });
+
+            const element = document.getElementById(`kapitola-${kapitola}-cviceni-${cviceni}`);
+            element.parentElement.parentElement.appendChild(para);
+        }
+        function addCviceni(kapitola){
+            //let pocet_cviceni = 0
+            const kapitola_rand = document.getElementById(
+                `kapitola-${kapitola}-cela`)
+            /*for(let i=3; i < kapitola_rand.childNodes.length; i++){
+                if((i-3)%2 == 0){
+                    pocet_cviceni++
+                }
+            }*/
+            const cele_cviceni = document.createElement('div')
+            cele_cviceni.setAttribute('id',`kapitola-${kapitola}-cviceni-zatim-1`)
+                const cele_bez_btn = document.createElement('div')
+                // zatim bez atributu
+                    const cviceni_nazev = document.createElement('p')
+                    cviceni_nazev = document.setAttribute('class','cviceni')
+                        const cviceni_nazev_span = document.createElement('span')
+                        cviceni_nazev_span.setAttribute('id',`kapitola-${kapitola}-cviceni-1`) // zatim jedna
+                        cviceni_nazev_span.setAttribute('role','textbox')
+                        cviceni_nazev_span.contentEditable = 'true'
+                const add_priklad = document.createElement('p')
+                add_priklad.setAttribute('class','priklad')
+                add_priklad.setAttribute('id',`kapitola${kapitola}-cviceni-zatim-1-pridatPriklad`)
+                    const add_priklad_btn = document.createElement('button')
+                    add_priklad_btn.setAttribute('class','btn-add')
+                    add_priklad_btn.setAttribute('onclick',`addPriklad(${kapitola},1)`) // zatim prvni cviceni
+            
+            kapitola_rand.appendChild(cele_cviceni)
+            cele_cviceni.appendChild(cele_bez_btn)
+                cele_bez_btn.appendChild(cviceni_nazev)
+                    cviceni_nazev.appendChild(cviceni_nazev_span)
+            cele_cviceni.appendChild(add_priklad)
+                add_priklad.appendChild(add_priklad_btn)
+        }
+        function addKapitolu(){
+            let count_kapitoly = 1
+            let i = 0
+            for(; i < ucebnice.childNodes.length; i++){
+                if (i % 2 == 1){
+                    count_kapitoly += 1
+                }
+            }
+
+            const kapitola = document.createElement('li')
+            kapitola.setAttribute('id',`kapitola-${count_kapitoly}-cela`)
+
+            const obsah = document.getElementById('obsah')
+                const kapitola_link = document.createElement('a')
+                kapitola_link.setAttribute('id',`kapitola-${count_kapitoly}-obsah`)
+                kapitola_link.setAttribute('href',`#kapitola-${count_kapitoly}`)
+                    const kapitola_link_li = document.createElement('li')
+                    const kapitola_link_li_text = document.createTextNode('Název kapitoly')
+
+            obsah.appendChild(kapitola_link)
+                kapitola_link.appendChild(kapitola_link_li)
+                    kapitola_link_li.appendChild(kapitola_link_li_text)
+            
+
+            const h5 = document.createElement('h5')
+            h5.setAttribute('class','kapitola')
+
+            const kapitola_span = document.createElement('span')
+            kapitola_span.setAttribute('id',`kapitola-${count_kapitoly}`)
+            kapitola_span.setAttribute('role','textbox')
+            kapitola_span.contentEditable = 'true'
+            const span_text = document.createTextNode("Název kapitoly")
+
+            const kapitola_cviceni = document.createElement('p')
+            kapitola_cviceni.setAttribute('class','cviceni')
+            kapitola_cviceni.setAttribute('id',`kapitola-${count_kapitoly}-btn-add`)
+            
+            const cviceni_add_button = document.createElement('button')
+            cviceni_add_button.setAttribute('class','btn-add')
+            //cviceni_add_button.setAttribute('onclick',`addCviceni(${count_kapitoly})`)
+            //cviceni_add_button.setAttribute('onclick','addKapitolu()')
+            cviceni_add_button.onclick = function() {addKapitolu()}
+            const cviceni_add_button_text = document.createTextNode("+ cvičení")
+
+            
+            ucebnice.appendChild(kapitola)
+            kapitola.appendChild(h5)
+            h5.appendChild(kapitola_span)
+            kapitola_span.appendChild(span_text)
+
+            ucebnice.appendChild(kapitola_cviceni)
+            kapitola_cviceni.appendChild(cviceni_add_button)
+            cviceni_add_button.appendChild(cviceni_add_button_text)
+        }
+
+        document.addEventListener('click', (event) => {
+            // mazani nadpisu a jejich kapitol
+            let count_kapitoly = 0
+            let i = 0
+            for(; i < ucebnice.childNodes.length; i++){
+                if (i % 2 == 0){
+                    count_kapitoly += 1
+                    document.getElementById(`kapitola-${count_kapitoly}-obsah`).childNodes[0].innerHTML = ucebnice.childNodes[i].childNodes[0].childNodes[0].innerHTML
+                    if(ucebnice.childNodes[i].childNodes[0].childNodes[0].innerHTML == ''){
+                        document.getElementById(`kapitola-${count_kapitoly}-cela`).remove()
+                        document.getElementById(`kapitola-${count_kapitoly}-btn-add`).remove()
+                        document.getElementById(`kapitola-${count_kapitoly}-obsah`).remove()
+                    }
+                }
+            }
+            // zmena id u obsahu a kapitol
+            count_kapitoly = 0
+            i = 0
+            let j = 0
+            for(; i < ucebnice.childNodes.length; i++){
+                if (i % 2 == 0){
+                    count_kapitoly += 1
+                    for(; j < document.getElementById('obsah').childNodes.length; j++){
+                        document.getElementById('obsah').childNodes[j].id = `kapitola-${j+1}-obsah`
+                    }
+                    ucebnice.childNodes[i].childNodes[0].childNodes[0].id = `kapitola-${count_kapitoly}`
+                }
+                else{
+                    ucebnice.childNodes[i].class = `kapitola-${count_kapitoly}-btn-add`
+                    ucebnice.childNodes[i].childNodes[0].onclick = `addCviceni(${count_kapitoly})`
+                }
+            }
+            
+        });
+
+
+    </script>
+</body>
+
+</html>
