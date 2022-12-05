@@ -177,3 +177,16 @@ def statistics(request):
         'page_obj': page_obj,
     }
     return render(request, 'statistics.html', context=context)
+
+def ajax_start(request):
+    return render(request, "tmp/ajax.html")
+
+def ajax(request):
+    if request.method == 'POST':
+        """name = request.POST['name']
+        email = request.POST['email']
+        bio = request.POST['bio']
+        new_profile = Profile(name=name,email=email,bio=bio)
+        new_profile.save()"""
+        successful = 'successful'
+        return HttpResponse(successful)

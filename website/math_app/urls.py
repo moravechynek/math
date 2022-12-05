@@ -27,4 +27,7 @@ urlpatterns = [
     path('priklad/create/', views.PrikladCreate.as_view(), name='priklad-create'),
     path('priklad/<int:pk>/update/', views.PrikladUpdate.as_view(), name='priklad-update'),
     path('priklad/<int:pk>/delete/', views.PrikladDelete.as_view(), name='priklad-delete'),
+
+    path('ajax/ajax',views.ajax, name='ajax'),
+    path('ajax/start',views.ajax_start, name='ajax_start'),
 ]
