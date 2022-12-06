@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+{% extends "base.html" %}
+    
+    {% block style %}
     <link rel="stylesheet" href="../../static/mathquill-0.10.1/mathquill.css" />
     <style>
         p.nav-link {
@@ -42,55 +36,28 @@
             cursor: pointer;
         }
     </style>
-
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-md bg-light navbar-inverse">
-        <div class="container-fluid">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Učebnice</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Kalkulačka</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Statistiky</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">React</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item">
-                    <p class="nav-link">Uživatel: admin</p>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Odhlásit se</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="#">Přihlásit se</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
+    {% endblock %}
+{% block content %}
 
     <div class="container mt-5">
         <h2>
-            <span role="textbox" contenteditable>Název učebnice</span>
+            <span id="ucebnice-nazev" role="textbox" contenteditable>Název učebnice</span>
         </h2>
+        <h3>{{ successful }}</h3>
         <div class="my-4">
             <ol id="obsah"></ol>
             <div style="width: 50%;">
                 <ol id="ucebnice"></ol>
                 <p class="kapitola">
                     <button class="btn-add" onclick="addKapitolu()">+ kapitolu</button>
+                    <br>
+                    <input type="submit">
                 </p>
             </div>
         </div>
     </div>
+    {% endblock %}
+    {% block script %}
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
 
@@ -241,9 +208,9 @@
             
             const cviceni_add_button = document.createElement('button')
             cviceni_add_button.setAttribute('class','btn-add')
-            //cviceni_add_button.setAttribute('onclick',`addCviceni(${count_kapitoly})`)
-            //cviceni_add_button.setAttribute('onclick','addKapitolu()')
-            cviceni_add_button.onclick = function() {addKapitolu()}
+            cviceni_add_button.addEventListener('click',function(){
+                addKapitolu()
+            })
             const cviceni_add_button_text = document.createTextNode("+ cvičení")
 
             
@@ -294,6 +261,26 @@
 
 
     </script>
+    <script>
+        $(document).on('submit','#post-form',function(e){
+            e.preventDefault();
+    
+            $.ajax({
+                type:'POST',
+                url:'ajax',
+                data:{
+                    ucebnice_nazev:$('#ucebnice-nazev').val(),
+                    email:$('#email').val(),
+                    bio:$('#bio').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(data){
+                    $('h2').html(data)
+                }
+            })
+        })
+    </script>
+    {% endblock %}
 </body>
 
 </html>

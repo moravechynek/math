@@ -181,6 +181,13 @@ def statistics(request):
 def ajax_start(request):
     return render(request, "tmp/ajax.html")
 
+def ucebnice_ajax_start(request, ucebnice_id):
+    return render(request, "tmp/ucebnice_edit_new.html")
+
+def ucebnice_ajax_response(request):
+    successful = 'successful'
+    return HttpResponse(successful)
+
 def ajax(request):
     if request.method == 'POST':
         """name = request.POST['name']

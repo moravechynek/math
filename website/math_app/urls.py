@@ -15,6 +15,9 @@ urlpatterns = [
     path('register/', views.register_request, name='register'),
 
     path('ucebnice/<int:ucebnice_id>/editace/', views.ucebniceEdit, name='ucebnice-editace'),
+    path('ucebnice/<int:ucebnice_id>/editace/ajax/start', views.ucebnice_ajax_start, name='ucebnice-editace-ajax-start'),
+    path('ucebnice/<int:ucebnice_id>/editace/ajax/data', views.ucebnice_ajax_response, name='ucebnice-editace-ajax-data'),
+
     path('ucebnice/create/', views.UcebniceCreate.as_view(), name='ucebnice-create'),
     path('ucebnice/<int:pk>/update/', views.UcebniceUpdate.as_view(), name='ucebnice-update'),
     path('ucebnice/<int:pk>/delete/', views.UcebniceDelete.as_view(), name='ucebnice-delete'),
