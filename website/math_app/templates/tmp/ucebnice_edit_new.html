@@ -51,7 +51,7 @@
                 <p class="kapitola">
                     <button class="btn-add" onclick="addKapitolu()">+ kapitolu</button>
                     <br>
-                    <input type="submit">
+                    <input type="submit" class="mt-4">
                 </p>
             </div>
         </div>
@@ -150,17 +150,19 @@
                 const cele_bez_btn = document.createElement('div')
                 // zatim bez atributu
                     const cviceni_nazev = document.createElement('p')
-                    cviceni_nazev = document.setAttribute('class','cviceni')
+                    cviceni_nazev.setAttribute('class','cviceni')
                         const cviceni_nazev_span = document.createElement('span')
                         cviceni_nazev_span.setAttribute('id',`kapitola-${kapitola}-cviceni-1`) // zatim jedna
                         cviceni_nazev_span.setAttribute('role','textbox')
                         cviceni_nazev_span.contentEditable = 'true'
+                        cviceni_nazev_span.innerHTML = 'Název cvičení'
                 const add_priklad = document.createElement('p')
                 add_priklad.setAttribute('class','priklad')
                 add_priklad.setAttribute('id',`kapitola${kapitola}-cviceni-zatim-1-pridatPriklad`)
                     const add_priklad_btn = document.createElement('button')
                     add_priklad_btn.setAttribute('class','btn-add')
                     add_priklad_btn.setAttribute('onclick',`addPriklad(${kapitola},1)`) // zatim prvni cviceni
+                    add_priklad_btn.innerHTML = '+ priklad'
             
             kapitola_rand.appendChild(cele_cviceni)
             cele_cviceni.appendChild(cele_bez_btn)
@@ -208,8 +210,9 @@
             
             const cviceni_add_button = document.createElement('button')
             cviceni_add_button.setAttribute('class','btn-add')
+            console.log(count_kapitoly)
             cviceni_add_button.addEventListener('click',function(){
-                addKapitolu()
+                addCviceni(count_kapitoly)
             })
             const cviceni_add_button_text = document.createTextNode("+ cvičení")
 

@@ -8,7 +8,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.core.paginator import Paginator
 
-from datetime import datetime
+import datetime
 
 from .models import Priklad, Reseni, Ucebnice, Kapitola, Cviceni
 from .forms import ReseniForm, UcebniceForm, RegistraceForm
@@ -160,10 +160,21 @@ def spatne(request):
 def statistics(request):
     labels = []
     data = []
+    today = str(datetime.date.today()).split('-')
+    print(f'Today is: {datetime.date.today()}')
+
+    for i in range(7):
+        labels.append(f'{int(today[2]) + i}-{today[1]}-{today[0]}')
 
     queryset = Reseni.objects.all()
     for i in queryset:
-        labels.append(i.FK_priklad.priklad)
+        print(str(i.cas).split(' ')[0].split('-')[2])
+        """
+        if rok je rok
+            if mesic je mesic
+                if den je den
+                    data[0].append(i)
+        """
     reseni = Reseni.objects.all()
 
     paginator = Paginator(reseni, 10)

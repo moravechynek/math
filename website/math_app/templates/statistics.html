@@ -78,7 +78,7 @@
         labels: {{ labels|safe }},
         datasets: [{
           label: '# of Votes',
-          data: [12, 19, 3, 5, 2],
+          data: {{ data|safe }},
           borderWidth: 1
         }]
       },
