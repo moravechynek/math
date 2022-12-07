@@ -159,23 +159,36 @@ def spatne(request):
 
 def statistics(request):
     labels = []
-    data = []
-    today = str(datetime.date.today()).split('-')
-    print(f'Today is: {datetime.date.today()}')
+    data = [0,0,0,0,0,0,0]
+    data_uspesnost = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
+    today = datetime.date.today()
 
     for i in range(7):
-        labels.append(f'{int(today[2]) + i}-{today[1]}-{today[0]}')
+        labels.append((today - datetime.timedelta(days=i)).strftime("%d.%m."))
 
     queryset = Reseni.objects.all()
     for i in queryset:
-        print(str(i.cas).split(' ')[0].split('-')[2])
-        """
-        if rok je rok
-            if mesic je mesic
-                if den je den
-                    data[0].append(i)
-        """
-    reseni = Reseni.objects.all()
+        for j in range(7):
+            if i.cas.date() == today - datetime.timedelta(days=j):
+                data[j] += 1
+                if i.je_spravne == True:
+                    data_uspesnost[j][0] += 1
+                else:
+                    data_uspesnost[j][1] += 1
+
+    
+    data_uspesnost_final = [0,0,0,0,0,0,0]
+    tmp = 0
+    for i in data_uspesnost:
+        if(i[0] + i[1]):
+            data_uspesnost_final[tmp] = i[0] / (i[0] + i[1]) * 100
+        tmp += 1
+
+    labels.reverse()
+    data.reverse()
+    data_uspesnost_final.reverse()
+
+    reseni = Reseni.objects.all().order_by('-cas')
 
     paginator = Paginator(reseni, 10)
     page_number = request.GET.get('page')
@@ -186,6 +199,7 @@ def statistics(request):
         'labels': labels,
         'data': data,
         'page_obj': page_obj,
+        'data_uspesnost': data_uspesnost_final,
     }
     return render(request, 'statistics.html', context=context)
 

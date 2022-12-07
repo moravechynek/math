@@ -4,8 +4,17 @@
 {% block content %}
 <div class="container p-5">
     <h2>Statistiky</h2>
-    <div class="px-5">
-        <canvas id="myChart"></canvas>
+    <div class="row">
+        <div class="col">
+            <div class="py-4">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <div class="col">
+            <div class="py-4">
+                <canvas id="uspesnostChart"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 <div class="container px-5 mb-5">
@@ -77,8 +86,29 @@
       data: {
         labels: {{ labels|safe }},
         datasets: [{
-          label: '# of Votes',
+          label: 'Počet řešených příkladů',
           data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    const ctx_uspesnost = document.getElementById('uspesnostChart');
+  
+    new Chart(ctx_uspesnost, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: '#Úspěšnost',
+          data: {{ data_uspesnost|safe }},
           borderWidth: 1
         }]
       },
