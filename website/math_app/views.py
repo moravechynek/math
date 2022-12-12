@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -6,7 +6,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
-from django.core.paginator import Paginator
 
 import datetime
 
@@ -164,7 +163,11 @@ def statistics(request):
     today = datetime.date.today()
 
     for i in range(7):
-        labels.append((today - datetime.timedelta(days=i)).strftime("%d.%m."))
+        day = (today - datetime.timedelta(days=i)).strftime("%d.%m.").split('.')
+        if day[0][0] == '0': day[0] = day[0][1]
+        if day[1][0] == '0': day[1] = day[1][1]
+        
+        labels.append(f'{day[0]}.{day[1]}.')
 
     queryset = Reseni.objects.all()
     for i in queryset:
@@ -188,37 +191,58 @@ def statistics(request):
     data.reverse()
     data_uspesnost_final.reverse()
 
-    reseni = Reseni.objects.all().order_by('-cas')
-
-    paginator = Paginator(reseni, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    i = 0
+    reseni = []
+    if Reseni.objects.all().count() > 10:
+        while i < 10:
+            reseni.append(Reseni.objects.all().order_by('-cas')[i])
+            i += 1
+    else:
+        reseni = Reseni.objects.all().order_by('-cas')
 
     context = {
         'reseni': reseni,
         'labels': labels,
         'data': data,
-        'page_obj': page_obj,
         'data_uspesnost': data_uspesnost_final,
     }
     return render(request, 'statistics.html', context=context)
 
+
+def ucebnice_ajax_start(request, ucebnice_id):
+    ucebnice = Ucebnice.objects.all()[ucebnice_id]
+    kapitoly = Kapitola.objects.filter(FK_ucebnice_id=ucebnice_id + 1)
+    cviceni = []
+    priklady = []
+    for k in kapitoly:
+        cviceni += Cviceni.objects.filter(FK_kapitola=k)
+    for c in cviceni:
+        priklady += Priklad.objects.filter(FK_cviceni=c)
+
+    context = {
+        'ucebnice': ucebnice,
+        'kapitoly': kapitoly,
+        'cviceni': cviceni,
+        'priklady': priklady
+    } 
+    return render(request, "tmp/ucebnice_edit_new.html", context=context)
+    #return render(request, "tmp/github-edit.html", context=context)
+
+def ucebnice_ajax_response(request, ucebnice_id):
+    if request.method == 'POST':
+        ucebnice_nazev = request.POST['ucebnice_nazev']
+        successful = 'successful'
+        context = {
+            'ucebnice_nazev': ucebnice_nazev,
+            'successful': successful,
+        }
+        return JsonResponse(context)
+
 def ajax_start(request):
     return render(request, "tmp/ajax.html")
 
-def ucebnice_ajax_start(request, ucebnice_id):
-    return render(request, "tmp/ucebnice_edit_new.html")
-
-def ucebnice_ajax_response(request):
-    successful = 'successful'
-    return HttpResponse(successful)
-
 def ajax(request):
     if request.method == 'POST':
-        """name = request.POST['name']
-        email = request.POST['email']
-        bio = request.POST['bio']
-        new_profile = Profile(name=name,email=email,bio=bio)
-        new_profile.save()"""
-        successful = 'successful'
-        return HttpResponse(successful)
+        name = request.POST['name']
+        heading = request.POST['heading']
+        return HttpResponse(heading)

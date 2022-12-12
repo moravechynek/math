@@ -9,14 +9,10 @@
 </head>
 <body>
     <h1>Heading 1</h1>
-    <h2>{{ successful }}</h2>
+    <h2>{{ name }}</h2>
     <form id="post-form">
         {% csrf_token %}
         <input type="text" id="name" name="name"><br>
-        <!--
-            <input type="text" id="email" name="email"><br>
-        <input type="text" id="bio" name="bio"><br>
-        -->
         <input type="submit">
     </form>
 </body>
@@ -29,8 +25,7 @@
             url:'ajax',
             data:{
                 name:$('#name').val(),
-                email:$('#email').val(),
-                bio:$('#bio').val(),
+                heading:$('h1').html(),
                 csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
             },
             success: function(data){

@@ -21,28 +21,28 @@
         <table class="table table-bordered">
             <tr>
                 <th>
-                    příklad
+                    datum
                 </th>
                 <th>
                     řešení
                 </th>
                 <th>
-                    datum
+                    příklad
                 </th>
                 <th>
                     správnost
                 </th>
             </tr>
-            {% for r in page_obj %}
+            {% for r in reseni %}
             <tr>
                 <td>
-                    {{ r.FK_priklad }}
+                    {{ r.cas|date:"j.n.Y" }}
                 </td>
                 <td>
                     {{ r.reseni }}
                 </td>
                 <td>
-                    {{ r.cas|date:"j.n.Y" }}
+                    {{ r.FK_priklad }}
                 </td>
                 <td>
                     {% if r.je_spravne %}
@@ -54,23 +54,6 @@
                 </tr>
             {% endfor %}
         </table>
-        <div class="pagination d-flex justify-content-center">
-          <span class="step-links">
-              {% if page_obj.has_previous %}
-                  <a href="?page=1">&laquo;</a>
-                  <a href="?page={{ page_obj.previous_page_number }}">předchozí</a>
-              {% endif %}
-      
-              <span class="current">
-                  {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}.
-              </span>
-      
-              {% if page_obj.has_next %}
-                  <a href="?page={{ page_obj.next_page_number }}">další</a>
-                  <a href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
-              {% endif %}
-          </span>
-      </div>
 </div>
 {% endblock %}
 
@@ -107,8 +90,15 @@
       data: {
         labels: {{ labels|safe }},
         datasets: [{
-          label: '#Úspěšnost',
+          label: 'Úspěšnost',
           data: {{ data_uspesnost|safe }},
+          backgroundColor: [
+          'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgb(75, 192, 192)'
+          ],
+
           borderWidth: 1
         }]
       },

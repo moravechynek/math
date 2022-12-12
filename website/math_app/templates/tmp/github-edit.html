@@ -43,71 +43,16 @@
         <h2>
             <span id="ucebnice-nazev" role="textbox" contenteditable>Název učebnice</span>
         </h2>
-        <h3></h3>
+        <h3>{{ successful }}</h3>
         <div class="my-4">
-            <ol id="obsah">
-                {% for k in kapitoly %}
-                    <a href="#kapitola{{ k.id }}">   
-                        <li id="kapitola-{{ forloop.counter }}-obsah">{{ k.nazev }}</li>
-                    </a>
-                {% endfor %}
-            </ol>
+            <ol id="obsah"></ol>
             <div style="width: 50%;">
-                <ol id="ucebnice">
-                {% if kapitoly %}
-                {% for k in kapitoly %}
-                    <li>
-                        <h5 class="kapitola">
-                            <span id="kapitola-{{ forloop.counter }}" role="textbox" contenteditable="true">{{ k.nazev }}</span>
-                        </h5>
-                    {% for c in cviceni %}
-                        {% if c.FK_kapitola == k %}
-                            <p class="cviceni">
-                                <span id="kapitola-1-cviceni-1" role="textbox" contenteditable="true">{{ c.text }}</span>
-                            </p>
-                            {% for p in priklady %}
-                                {% if p.FK_cviceni == c %}
-                                        <p style="width: 50%;">
-                                            <span>\({{ p.priklad }}\)</span>
-                                        </p>
-                                {% endif %}
-                            {% endfor %}
-                            <p class="priklad" id="kapitola1-cviceni-zatim-1-pridatPriklad">
-                                <button class="btn-add" onclick="addPriklad(1,1)">+ priklad</button>
-                            </p>
-                        {% endif %}
-                    {% endfor %}
-                    <p class="cviceni" id="kapitola-1-btn-add">
-                        <button class="btn-add">+ cvičení</button>
-                    </p>
-                    </li>
-                {% endfor %}
-                </ol>
+                <ol id="ucebnice"></ol>
                 <p class="kapitola">
                     <button class="btn-add" onclick="addKapitolu()">+ kapitolu</button>
                     <br>
-                    <form id="post-form">
-                        {% csrf_token %}
-                        <input type="submit">
-                    </form>
-                    <div id="div-response" style="display:none;" class="alert alert-success alert-dismissible fade show mt-2" role="alert">
-                        <span id="response"></span>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
+                    <input type="submit" class="mt-4">
                 </p>
-        
-            {% else %}
-                <p class="kapitola">
-                    <button class="btn-add" onclick="addKapitolu()">+ kapitolu</button>
-                </p>
-                <form id="post-form">
-                    {% csrf_token %}
-                    <input type="submit">
-                    <p id="response"></p>
-                </form>
-            {% endif %}
             </div>
         </div>
     </div>
@@ -144,13 +89,13 @@
             let pocet_prikladu = 0
             const cviceni_rand = document.getElementById(
                 `kapitola-${kapitola}-cviceni-${cviceni}`)
-            //console.log(cviceni_rand.childNodes.length)
+            console.log(cviceni_rand.childNodes.length)
             for(let i=0; i < cviceni_rand.childNodes.length; i++){
                 if((i%2) == 0){
                     pocet_prikladu++
                 }
             }
-           //console.log(pocet_prikladu)
+            console.log(pocet_prikladu)
 
             const para = document.createElement("p");
             para.classList.add("priklad");
@@ -265,7 +210,7 @@
             
             const cviceni_add_button = document.createElement('button')
             cviceni_add_button.setAttribute('class','btn-add')
-            //console.log(count_kapitoly)
+            console.log(count_kapitoly)
             cviceni_add_button.addEventListener('click',function(){
                 addCviceni(count_kapitoly)
             })
@@ -273,52 +218,47 @@
 
             
             ucebnice.appendChild(kapitola)
-                kapitola.appendChild(h5)
-                    h5.appendChild(kapitola_span)
-                        kapitola_span.appendChild(span_text)
+            kapitola.appendChild(h5)
+            h5.appendChild(kapitola_span)
+            kapitola_span.appendChild(span_text)
 
             ucebnice.appendChild(kapitola_cviceni)
-                kapitola_cviceni.appendChild(cviceni_add_button)
-                    cviceni_add_button.appendChild(cviceni_add_button_text)
+            kapitola_cviceni.appendChild(cviceni_add_button)
+            cviceni_add_button.appendChild(cviceni_add_button_text)
         }
 
         document.addEventListener('click', (event) => {
             // mazani nadpisu a jejich kapitol
             let count_kapitoly = 0
-            let i = 1
+            let i = 0
             for(; i < ucebnice.childNodes.length; i++){
-                if (i % 2 == 1){
+                if (i % 2 == 0){
                     count_kapitoly += 1
-                    let obsah = document.getElementById(`kapitola-${count_kapitoly}-obsah`).childNodes[0]
-                    obsah.innerHTML = ucebnice.childNodes[i].childNodes[1].childNodes[1].innerHTML
-                    console.log(obsah.innerHTML)
-                    console.log(ucebnice.childNodes[i].childNodes[1].childNodes[1].innerHTML)
-                    /*if(ucebnice.childNodes[i].childNodes[0].childNodes[0].innerHTML == ''){
+                    document.getElementById(`kapitola-${count_kapitoly}-obsah`).childNodes[0].innerHTML = ucebnice.childNodes[i].childNodes[0].childNodes[0].innerHTML
+                    if(ucebnice.childNodes[i].childNodes[0].childNodes[0].innerHTML == ''){
                         document.getElementById(`kapitola-${count_kapitoly}-cela`).remove()
                         document.getElementById(`kapitola-${count_kapitoly}-btn-add`).remove()
                         document.getElementById(`kapitola-${count_kapitoly}-obsah`).remove()
-                    }*/
+                    }
                 }
             }
-            
             // zmena id u obsahu a kapitol
-            /*count_kapitoly = 0
+            count_kapitoly = 0
+            i = 0
             let j = 0
-            for(let i=0; i < ucebnice.childNodes.length; i++){
+            for(; i < ucebnice.childNodes.length; i++){
                 if (i % 2 == 0){
                     count_kapitoly += 1
                     for(; j < document.getElementById('obsah').childNodes.length; j++){
                         document.getElementById('obsah').childNodes[j].id = `kapitola-${j+1}-obsah`
                     }
                     ucebnice.childNodes[i].childNodes[0].childNodes[0].id = `kapitola-${count_kapitoly}`
-                    console.log('suda')
                 }
                 else{
                     ucebnice.childNodes[i].class = `kapitola-${count_kapitoly}-btn-add`
                     ucebnice.childNodes[i].childNodes[0].onclick = `addCviceni(${count_kapitoly})`
-                    console.log('licha')
                 }
-            }*/
+            }
             
         });
 
@@ -332,14 +272,13 @@
                 type:'POST',
                 url:'ajax',
                 data:{
-                    ucebnice_nazev:$('#ucebnice-nazev').html(),
+                    ucebnice_nazev:$('#ucebnice-nazev').val(),
+                    email:$('#email').val(),
+                    bio:$('#bio').val(),
                     csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
                 },
                 success: function(data){
-                    //console.log(data)
-                    $('h3').html(data.ucebnice_nazev)
-                    $('#response').html(data.successful)
-                    document.getElementById('div-response').style.display = 'block'
+                    $('h2').html(data)
                 }
             })
         })

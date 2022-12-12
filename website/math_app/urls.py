@@ -16,7 +16,7 @@ urlpatterns = [
 
     path('ucebnice/<int:ucebnice_id>/editace/', views.ucebniceEdit, name='ucebnice-editace'),
     path('ucebnice/<int:ucebnice_id>/editace/ajax/start', views.ucebnice_ajax_start, name='ucebnice-editace-ajax-start'),
-    path('ucebnice/<int:ucebnice_id>/editace/ajax/data', views.ucebnice_ajax_response, name='ucebnice-editace-ajax-data'),
+    path('ucebnice/<int:ucebnice_id>/editace/ajax/ajax', views.ucebnice_ajax_response, name='ucebnice-editace-ajax-response'),
 
     path('ucebnice/create/', views.UcebniceCreate.as_view(), name='ucebnice-create'),
     path('ucebnice/<int:pk>/update/', views.UcebniceUpdate.as_view(), name='ucebnice-update'),
