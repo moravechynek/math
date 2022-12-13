@@ -231,9 +231,11 @@ def ucebnice_ajax_start(request, ucebnice_id):
 def ucebnice_ajax_response(request, ucebnice_id):
     if request.method == 'POST':
         ucebnice_nazev = request.POST['ucebnice_nazev']
+        ucebnice = Ucebnice.objects.all()[ucebnice_id]
+        ucebnice.nazev = ucebnice_nazev
+        ucebnice.save()
         successful = 'successful'
         context = {
-            'ucebnice_nazev': ucebnice_nazev,
             'successful': successful,
         }
         return JsonResponse(context)
