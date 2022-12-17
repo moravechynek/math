@@ -1,7 +1,8 @@
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
@@ -39,25 +40,6 @@ def ucebnice(request, ucebnice_id):
     } 
     return render(request, 'ucebnice.html', context=context)
 
-@login_required
-def ucebniceEdit(request, ucebnice_id):
-    ucebnice = Ucebnice.objects.all()[ucebnice_id]
-    kapitoly = Kapitola.objects.filter(FK_ucebnice_id=ucebnice_id + 1)
-    cviceni = []
-    priklady = []
-    for k in kapitoly:
-        cviceni += Cviceni.objects.filter(FK_kapitola=k)
-    for c in cviceni:
-        priklady += Priklad.objects.filter(FK_cviceni=c)
-
-    context = {
-        'ucebnice': ucebnice,
-        'kapitoly': kapitoly,
-        'cviceni': cviceni,
-        'priklady': priklady
-    } 
-    return render(request, 'ucebnice_edit.html', context=context)
-
 class UcebniceCreate(LoginRequiredMixin,CreateView):
     model = Ucebnice
     fields = ['nazev','obrazek','autor']
@@ -72,47 +54,7 @@ class UcebniceDelete(LoginRequiredMixin,DeleteView):
     model = Ucebnice
     success_url = reverse_lazy('index')
 
-class KapitolaCreate(LoginRequiredMixin,CreateView):
-    model = Kapitola
-    fields = ['nazev',]
-    template_name_suffix = '_create'
-    success_url = reverse_lazy('index')
 
-class KapitolaUpdate(LoginRequiredMixin,UpdateView):
-    model = Kapitola
-    fields = ['nazev',]
-
-class KapitolaDelete(LoginRequiredMixin,DeleteView):
-    model = Kapitola
-    success_url = reverse_lazy('index')
-
-class CviceniCreate(LoginRequiredMixin,CreateView):
-    model = Cviceni
-    fields = ['text',]
-    template_name_suffix = '_create'
-    success_url = reverse_lazy('index')
-
-class CviceniUpdate(LoginRequiredMixin,UpdateView):
-    model = Cviceni
-    fields = ['text',]
-
-class CviceniDelete(LoginRequiredMixin,DeleteView):
-    model = Cviceni
-    success_url = reverse_lazy('index')
-
-class PrikladCreate(LoginRequiredMixin,CreateView):
-    model = Priklad
-    fields = ['priklad',]
-    template_name_suffix = '_create'
-    success_url = reverse_lazy('index')
-
-class PrikladUpdate(LoginRequiredMixin,UpdateView):
-    model = Priklad
-    fields = ['priklad',]
-
-class PrikladDelete(LoginRequiredMixin,DeleteView):
-    model = Priklad
-    success_url = reverse_lazy('index')
 
 def register_request(request):
 	if request.method == "POST":
@@ -125,6 +67,11 @@ def register_request(request):
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = RegistraceForm()
 	return render (request=request, template_name="registration/register.html", context={"register_form":form})
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/register.html'
 
 def vypocet(request, priklad_id):
     i = 1
@@ -208,8 +155,8 @@ def statistics(request):
     }
     return render(request, 'statistics.html', context=context)
 
-
-def ucebnice_ajax_start(request, ucebnice_id):
+@login_required
+def ucebnice_edit(request, ucebnice_id):
     ucebnice = Ucebnice.objects.all()[ucebnice_id]
     kapitoly = Kapitola.objects.filter(FK_ucebnice_id=ucebnice_id + 1)
     cviceni = []
@@ -225,26 +172,22 @@ def ucebnice_ajax_start(request, ucebnice_id):
         'cviceni': cviceni,
         'priklady': priklady
     } 
-    return render(request, "tmp/ucebnice_edit_new.html", context=context)
-    #return render(request, "tmp/github-edit.html", context=context)
+    return render(request, "ucebnice_edit.html", context=context)
 
-def ucebnice_ajax_response(request, ucebnice_id):
+@login_required
+def ucebnice_edit_ajax(request, ucebnice_id):
     if request.method == 'POST':
-        ucebnice_nazev = request.POST['ucebnice_nazev']
+        # UCEBNICE
+        nazev = request.POST['nazev']
         ucebnice = Ucebnice.objects.all()[ucebnice_id]
-        ucebnice.nazev = ucebnice_nazev
+        ucebnice.nazev = nazev
         ucebnice.save()
+        # KAPITOLY
+        print(request.POST)
+        #for k in kapitoly: print(k)
+        # RESPONSE
         successful = 'successful'
         context = {
             'successful': successful,
         }
         return JsonResponse(context)
-
-def ajax_start(request):
-    return render(request, "tmp/ajax.html")
-
-def ajax(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        heading = request.POST['heading']
-        return HttpResponse(heading)

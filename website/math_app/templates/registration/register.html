@@ -6,13 +6,13 @@
 
 <!--Register--> 
 <div class="container py-5">
-	<h1>Register</h1>
+	<h1>Registrace</h1>
 	<form method="POST">
 		{% csrf_token %}
 		{{ register_form|crispy }}                    
-		<button class="btn btn-primary" type="submit">Register</button>
+		<button class="btn btn-primary" type="submit">registrovat</button>
 	</form>
-	<p class="text-center">If you already have an account, <a href="/accounts/login/">login</a> instead.</p>
+	<p class="text-center">Pokud již máte účet, můžete se <a href="/accounts/login/">přihlásit</a>.</p>
 </div>
 
 {% endblock %}
