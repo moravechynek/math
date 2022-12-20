@@ -19,7 +19,8 @@
     <div class="container">
         <div class="row infinite-container">
             {% for r in posts %}
-                <div class="col-12 infinite-item">
+                {% if user == r.author %}
+                  <div class="col-12 infinite-item">
                     <table class="table table-bordered">
                         <tr>
                             <td>
@@ -37,7 +38,8 @@
                             </td>
                         </tr>
                     </table>
-                </div>
+                  </div>
+                {% endif %}
             {% endfor %}
         </div>
         {% if page_obj.has_next %}

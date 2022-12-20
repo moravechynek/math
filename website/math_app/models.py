@@ -69,7 +69,7 @@ class Reseni(models.Model):
         default=None)
     je_spravne = models.BooleanField(default=None)
     cas = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    uzivatel = models.CharField(max_length=100, blank=True, null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     
     def __str__(self):
             return self.reseni
