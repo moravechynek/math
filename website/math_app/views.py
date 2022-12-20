@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -94,66 +95,52 @@ def vypocet(request, priklad_id):
         form = ReseniForm(priklad=priklad)
     return render(request, 'form.html', {'form': form, 'priklad': priklad })
 
-def calc(request):
-    return render(request, "calc.html")
-
 def spravne(request):
     return render(request, "spravne.html")
 
 def spatne(request):
     return render(request, "spatne.html")
 
-def statistics(request):
-    labels = []
-    data = [0,0,0,0,0,0,0]
-    data_uspesnost = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
-    today = datetime.date.today()
+class StatView(ListView):
+    model = Reseni 
+    paginate_by = 7
+    context_object_name = 'posts'
+    ordering = ['-cas']
 
-    for i in range(7):
-        day = (today - datetime.timedelta(days=i)).strftime("%d.%m.").split('.')
-        if day[0][0] == '0': day[0] = day[0][1]
-        if day[1][0] == '0': day[1] = day[1][1]
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        today = datetime.date.today()
+        labels = []
+        for i in range(7):
+            day = (today - datetime.timedelta(days=i)).strftime("%d.%m.").split('.')
+            if day[0][0] == '0': day[0] = day[0][1]
+            if day[1][0] == '0': day[1] = day[1][1]
+            labels.append(f'{day[0]}.{day[1]}.')
         
-        labels.append(f'{day[0]}.{day[1]}.')
+        data = [0,0,0,0,0,0,0]
+        data_uspesnost = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
+        queryset = Reseni.objects.all()
+        for i in queryset:
+            for j in range(7):
+                if i.cas.date() == today - datetime.timedelta(days=j):
+                    data[j] += 1
+                    if i.je_spravne == True:
+                        data_uspesnost[j][0] += 1
+                    else:
+                        data_uspesnost[j][1] += 1
 
-    queryset = Reseni.objects.all()
-    for i in queryset:
-        for j in range(7):
-            if i.cas.date() == today - datetime.timedelta(days=j):
-                data[j] += 1
-                if i.je_spravne == True:
-                    data_uspesnost[j][0] += 1
-                else:
-                    data_uspesnost[j][1] += 1
+        data_uspesnost_final = [0,0,0,0,0,0,0]
+        tmp = 0
+        for i in data_uspesnost:
+            if(i[0] + i[1]):
+                data_uspesnost_final[tmp] = i[0] / (i[0] + i[1]) * 100
+            tmp += 1
+        context['labels'] = labels
+        context['data'] = data
+        context['data_uspesnost'] = data_uspesnost_final
+        return context
 
-    
-    data_uspesnost_final = [0,0,0,0,0,0,0]
-    tmp = 0
-    for i in data_uspesnost:
-        if(i[0] + i[1]):
-            data_uspesnost_final[tmp] = i[0] / (i[0] + i[1]) * 100
-        tmp += 1
 
-    labels.reverse()
-    data.reverse()
-    data_uspesnost_final.reverse()
-
-    i = 0
-    reseni = []
-    if Reseni.objects.all().count() > 10:
-        while i < 10:
-            reseni.append(Reseni.objects.all().order_by('-cas')[i])
-            i += 1
-    else:
-        reseni = Reseni.objects.all().order_by('-cas')
-
-    context = {
-        'reseni': reseni,
-        'labels': labels,
-        'data': data,
-        'data_uspesnost': data_uspesnost_final,
-    }
-    return render(request, 'statistics.html', context=context)
 
 @login_required
 def ucebnice_edit(request, ucebnice_id):
@@ -191,3 +178,4 @@ def ucebnice_edit_ajax(request, ucebnice_id):
             'successful': successful,
         }
         return JsonResponse(context)
+

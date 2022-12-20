@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{%load static%}
+{% block content %}
+    <div class="container p-5">
+        <h2>Statistiky</h2>
+        <div class="row">
+            <div class="col">
+                <div class="py-4">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+            <div class="col">
+                <div class="py-4">
+                    <canvas id="uspesnostChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row infinite-container">
+            {% for r in posts %}
+                <div class="col-12 infinite-item">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>
+                                {{ r.cas|date:"j.n.Y" }}
+                            </td>
+                            <td>
+                                {{ r.FK_priklad }} = {{ r.reseni }}
+                            </td>
+                            <td>
+                                {% if r.je_spravne %}
+                                <img src={% static 'img/icons/icons8-done.svg' %} style="height:24px;width:24px;"></img>
+                                {% else %}
+                                <img src={% static 'img/icons/icons8-close.svg' %} style="height:24px;width:24px;"></img>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+        {% if page_obj.has_next %}
+        <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+        {% endif %}
+        <div class="d-flex justify-content-center" style="display:none;">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha512-DUC8yqWf7ez3JD1jszxCWSVB0DMP78eOyBpMa5aJki1bIRARykviOuImIczkxlj1KhVSyS16w2FSQetkD4UU2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src={% static 'js/jquery.waypoints.min.js' %}></script>
+<script src={% static 'js/infinite.min.js' %}></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Počet řešených příkladů',
+          data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    const ctx_uspesnost = document.getElementById('uspesnostChart');
+  
+    new Chart(ctx_uspesnost, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Úspěšnost',
+          data: {{ data_uspesnost|safe }},
+          backgroundColor: [
+          'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgb(75, 192, 192)'
+          ],
+
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+</script>
+<script>
+var infinite = new Waypoint.Infinite({
+element: $('.infinite-container')[0],
+handler: function(direction) {
+
+},
+offset: 'bottom-in-view',
+
+onBeforePageLoad: function () {
+$('.spinner-border').show();
+},
+onAfterPageLoad: function () {
+$('.spinner-border').hide();
+}
+
+});
+
+</script>
+{% endblock %}

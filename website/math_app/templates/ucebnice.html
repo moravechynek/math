@@ -6,6 +6,12 @@
         .priklad-link{
             color: black;
         }
+        .priklad {
+            padding-left: 40px;}
+        .cviceni {
+            padding-left: 10px;}
+        .kapitola {
+            padding-left: 0px;}
     </style>
 {% endblock %}
 
@@ -20,20 +26,22 @@
         {% comment "" %}/ucebnice/{{ ucebnice.id}}/update{% endcomment %}
         <div class="my-4">
             {% if kapitoly %}
+                <ol>
                 {% for k in kapitoly %}
-                    <p>
-                        <a href="#kapitola{{ k.id }}">{{ forloop.counter }}. {{ k.nazev }}</a>
-                    </p>
+                    <a href="#k{{ k.id }}-nadpis">
+                        <li id="k{{ forloop.counter }}-obsah">{{ k.nazev }}</li>
+                    </a>
                 {% endfor %}
+                </ol>
                 {% for k in kapitoly %}
-                    <h5 id="kapitola{{ k.id }}">{{ forloop.counter }}. {{ k.nazev }}</h5>
+                    <h5 id="kapitola{{ k.id }}" class="kapitola">{{ forloop.counter }}. {{ k.nazev }}</h5>
                     {% for c in cviceni %}
                         {% if c.FK_kapitola == k %}
-                            <p>{{ c.text }}</p>
+                            <p class="cviceni">{{ c.text }}</p>
                             {% for p in priklady %}
                                 {% if p.FK_cviceni == c %}
                                     <a href={% url 'vypocet' p.id|add:-1 %} class="priklad-link">
-                                        <p>\({{ p.priklad }}\)</p>
+                                        <p class="priklad">\({{ p.priklad }}\)</p>
                                     </a>
                                 {% endif %}
                             {% endfor %}

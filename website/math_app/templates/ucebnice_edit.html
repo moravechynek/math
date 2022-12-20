@@ -126,6 +126,7 @@
     <script src={% static './mathquill-0.10.1/mathquill.js' %}></script>
 
 <script>
+    let MQ = MathQuill.getInterface(2);// for backcompat
     const ucebnice = document.getElementById('ucebnice')
     const obsah = document.getElementById('obsah')
 
@@ -186,11 +187,8 @@
         }
     }
     for(let i=1; i <= pocet_prikladu; i++){
-        document.getElementById(`math-field-${i}`).addEventListener('change',(event) => {
-            //document.getElementById(`input-priklad-${i}`).style.display = 'none'
-            
-            var MQ = MathQuill.getInterface(2); // for backcompat
-            var mathField = MQ.MathField(document.getElementById(`math-field-${i}`), {
+        document.getElementById(`input-priklad-${i}`).style.display = 'none'
+        const mathField = new MQ.MathField(document.getElementById(`math-field-${i}`), {
             spaceBehavesLikeTab: true, // configurable
             handlers: {
                 edit: function() { // useful event handlers
@@ -198,7 +196,6 @@
                 }
             }
             });
-        });
     }
     
 
