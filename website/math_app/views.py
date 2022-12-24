@@ -113,9 +113,7 @@ class StatView(ListView):
         labels = []
         for i in range(7):
             day = (today - datetime.timedelta(days=i)).strftime("%d.%m.").split('.')
-            if day[0][0] == '0': day[0] = day[0][1]
-            if day[1][0] == '0': day[1] = day[1][1]
-            labels.append(f'{day[0]}.{day[1]}.')
+            labels.append(f'{int(day[0])}.{int(day[1])}.')
         
         data = [0,0,0,0,0,0,0]
         data_uspesnost = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]
