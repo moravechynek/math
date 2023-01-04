@@ -183,3 +183,14 @@ def ucebnice_edit_ajax(request, ucebnice_id):
         }
         return JsonResponse(context)
 
+def vyhledavani(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        sbirky = Ucebnice.objects.filter(nazev__contains=searched)
+        context = {
+            'searched':searched,
+            'sbirky':sbirky
+        }
+        return render(request, "seznam_sbirek.html", context=context)
+    else:
+        return render(request, "seznam_sbirek.html")

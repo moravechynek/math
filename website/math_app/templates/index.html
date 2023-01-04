@@ -1,31 +1,48 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block search %}
+<form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'vyhledavani' %}">
+    {% csrf_token %}
+    <input class="form-control mr-sm-2" type="search" placeholder="Hledat" aria-label="Search" name="searched">
+    <button class="btn my-2 my-sm-0" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+    </button>
+    
+</form>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-    <div class="row">
+    <h3 class="text-center">Nejlépe hodnocené sbírky</h3>
+    <div class="row d-flex justify-content-center">
         {% for u in ucebnice %}
-        <div class="col-2 my-2">
+        <div class="col-2 my-2 mx-2 card">
             {% if u.obrazek %}
             <a href="/ucebnice/{{ u.id|add:"-1"}}">
-                <img class="border" src={% static 'img/book.png'  %} alt={{ u.obrazek.url }} style="max-width:150px;max-height:200px;min-width:150px;min-height:200px;">
+                <img class="card-img-top" src={% static 'img/book.png'  %} alt={{ u.obrazek.url }} style="max-width:150px;max-height:200px;min-width:150px;min-height:200px;">
                 <!-- {{ u.obrazek.url }} -->
             </a>
             {% else %}
             <a href="/ucebnice/{{ u.id|add:"-1"}}">
-                <div class="border" style="max-width:134px;max-height:200px;min-width:134px;min-height:200px;"></div>
+                <img class="card-img-top" src={% static 'img/book.png'  %} alt="výchozí obrázek" style="max-width:150px;max-height:200px;min-width:150px;min-height:200px;">
             </a>
             {% endif %}
+            <div class="card-body">
+                <h6 class="card-title text-center">{{ u.nazev }}</h6>
+                <h6 class="text-center">{{ u.autor }}</h6>
+            </div>
         </div>
         {% endfor %}
-        {% if user.is_authenticated %}
-            <div class="col-2 my-2 d-flex align-items-center">
-                <a href={% url 'ucebnice-create' %} class="btn bg-success text-light">
-                    +
-                </a>
-            </div>
-        {% endif %}
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-import frontend.views
+#import frontend.views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -9,7 +9,6 @@ urlpatterns = [
     path('spatne/', views.spatne, name='spatne'),
     path('ucebnice/<int:ucebnice_id>/', views.ucebnice, name='ucebnice'),
     path('priklad/<int:priklad_id>/', views.vypocet, name='vypocet'),
-    path('react/', frontend.views.index, name='react'),
     path('register/', views.register_request, name='register'),
 
     path('ucebnice/<int:ucebnice_id>/editace/', views.ucebnice_edit, name='ucebnice-editace'),
@@ -20,4 +19,6 @@ urlpatterns = [
     path('ucebnice/<int:pk>/delete/', views.UcebniceDelete.as_view(), name='ucebnice-delete'),
 
     path('statistiky/', views.StatView.as_view(), name='statistics'),
+
+    path('vyhledavani', views.vyhledavani, name='vyhledavani'),
 ]
