@@ -11,6 +11,8 @@ class Ucebnice(models.Model):
     autor = models.CharField(max_length=100,blank=True,null=True)
     cas_vytvoreni = models.DateTimeField(auto_now=True,blank=True,null=True)
     cas_zmeny = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    muzou_editovat = models.ManyToManyField(User)
+    # muze_editovat
     def __str__(self):
         return self.nazev
     class Meta:

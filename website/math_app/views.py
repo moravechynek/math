@@ -33,11 +33,14 @@ def ucebnice(request, ucebnice_id):
     for c in cviceni:
         priklady += Priklad.objects.filter(FK_cviceni=c)
 
+    muzou_pocitat = Ucebnice.objects.prefetch_related('muzou_pocitat')
+
     context = {
         'ucebnice': ucebnice,
         'kapitoly': kapitoly,
         'cviceni': cviceni,
-        'priklady': priklady
+        'priklady': priklady,
+        'uzivatele': muzou_pocitat
     } 
     return render(request, 'ucebnice.html', context=context)
 

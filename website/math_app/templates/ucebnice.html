@@ -19,11 +19,17 @@
     <div class="container mt-5">
         <h2>
             {{ ucebnice.nazev }}
-            <a href={% url 'ucebnice-editace' ucebnice.id|add:-1 %}>
-                <img style="width:20px;height:20px;" src={% static 'img/icons/edit.png' %} alt="edit-icon"></img>
-            </a>
+            {% if user in ucebnice.muzou_editovat.all %}
+                <a href={% url 'ucebnice-editace' ucebnice.id|add:-1 %}>
+                    <img style="width:20px;height:20px;" src={% static 'img/icons/edit.png' %} alt="edit-icon"></img>
+                </a>
+            {% endif %}
         </h2>
-        {% comment "" %}/ucebnice/{{ ucebnice.id}}/update{% endcomment %}
+        {% comment "" %}
+        <h5>
+            {{ ucebnice.autor }}
+        </h5>
+        {% endcomment %}
         <div class="my-4">
             {% if kapitoly %}
                 <ol>
