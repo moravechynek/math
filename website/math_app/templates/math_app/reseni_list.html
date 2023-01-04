@@ -17,31 +17,27 @@
         </div>
     </div>
     <div class="container">
-        <div class="row infinite-container">
+          <table class="table table-bordered infinite-container">
             {% for r in posts %}
-                {% if user == r.author %}
-                  <div class="col-12 infinite-item">
-                    <table class="table table-bordered">
-                        <tr>
-                            <td>
-                                {{ r.cas|date:"j.n.Y" }}
-                            </td>
-                            <td>
-                                {{ r.FK_priklad }} = {{ r.reseni }}
-                            </td>
-                            <td>
-                                {% if r.je_spravne %}
-                                <img src={% static 'img/icons/icons8-done.svg' %} style="height:24px;width:24px;"></img>
-                                {% else %}
-                                <img src={% static 'img/icons/icons8-close.svg' %} style="height:24px;width:24px;"></img>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </table>
-                  </div>
-                {% endif %}
+              {% if user == r.author %}
+                <tr class="infinite-item">
+                  <td>
+                    {{ r.cas|date:"j.n.Y" }}
+                  </td>
+                  <td>
+                    {{ r.FK_priklad }} = {{ r.reseni }}
+                  </td>
+                  <td>
+                    {% if r.je_spravne %}
+                      <img src={% static 'img/icons/icons8-done.svg' %} style="height:24px;width:24px;"></img>
+                    {% else %}
+                      <img src={% static 'img/icons/icons8-close.svg' %} style="height:24px;width:24px;"></img>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endif %}
             {% endfor %}
-        </div>
+          </table>
         {% if page_obj.has_next %}
         <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
         {% endif %}

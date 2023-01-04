@@ -5,12 +5,9 @@
 
 ## Statistiky
 - počet vypočtených příkladů v týdnu, měsíci, roce, za celou dobu (bar chart)
-- úspěšnost řešení (bar chart)
 - úspěšnost různých operací (radar nebo polar chart)
 
-## Formuláře
+## Další
 - automaticky přidávat učebnici ke kapitole...
-- úprava kapitol, příkladů,... přímo v editaci učebnice
-- testování
 - stránkování u učebnic
 - přidat více matematických funkcí

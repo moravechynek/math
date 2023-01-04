@@ -101,7 +101,7 @@ def spravne(request):
 def spatne(request):
     return render(request, "spatne.html")
 
-class StatView(ListView):
+class StatView(LoginRequiredMixin, ListView):
     model = Reseni 
     paginate_by = 7
     context_object_name = 'posts'
@@ -122,10 +122,13 @@ class StatView(ListView):
             for j in range(7):
                 if i.cas.date() == today - datetime.timedelta(days=j):
                     data[j] += 1
-                    if i.je_spravne == True:
+                    data_uspesnost[j][int(i.je_spravne)] += 1
+                    """if i.je_spravne == True:
                         data_uspesnost[j][0] += 1
+                        print(f'Spravne: {int(i.je_spravne)}')
                     else:
                         data_uspesnost[j][1] += 1
+                        print(f'Spatne: {int(i.je_spravne)}')"""
 
         data_uspesnost_final = [0,0,0,0,0,0,0]
         tmp = 0
